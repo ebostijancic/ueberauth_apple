@@ -40,8 +40,10 @@ defmodule Ueberauth.Strategy.Apple do
 
     case Ueberauth.Strategy.Apple.OAuth.get_access_token([code: code], opts) do
       {:ok, token} ->
+        token_params = Ueberauth.json_library().decode!(token.access_token)
+
         apple_user =
-          Map.put(user, "uid", UeberauthApple.uid_from_id_token(token.other_params["id_token"]))
+          Map.put(user, "uid", UeberauthApple.uid_from_id_token(token_params["id_token"]))
 
         conn
         |> put_private(:apple_token, token)
