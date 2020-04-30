@@ -44,6 +44,8 @@ defmodule Ueberauth.Strategy.Apple.OAuth do
     opts
     |> client
     |> OAuth2.Client.authorize_url!(params)
+    # Apple needs url encoded spaces, not plus concatenated strings
+    |> String.replace(~r/(\w+)\+/, "\\1%20")
   end
 
   def get(token, url, headers \\ [], opts \\ []) do
